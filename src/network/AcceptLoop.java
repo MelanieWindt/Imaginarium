@@ -15,7 +15,7 @@ class AcceptLoop extends Thread {
   }
 
   public void run() {
-    while(this.socket.isBound()) {
+    while(!this.socket.isClosed()) {
       try {
         Socket acceptedSocket = this.socket.accept();
         this.acceptHanlder.apply(acceptedSocket);

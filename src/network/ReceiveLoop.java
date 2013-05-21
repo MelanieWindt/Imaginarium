@@ -23,17 +23,16 @@ class ReceiveLoop extends Thread {
   }
 
   public void run() {
-    while(this.socket.isConnected()) {
+    while(this.socket.isConnected() && !this.socket.isInputShutdown()) {
       try {
-        System.out.println("Wait for message!");
         final String message = this.socketReader.readLine().trim();
-        System.out.println("Rcv message!");
+        System.out.println("Rcv message: " + message.trim());
         this.receiveHandler.apply(message);
       } catch (Exception e) {
-        e.printStackTrace();
-        closeHandler.apply(Boolean.TRUE);
+        closeHandler.apply(Boolean.FALSE);
+        return;
       }
     }
-    closeHandler.apply(Boolean.TRUE);
+    closeHandler.apply(Boolean.FALSE);
   }
 }
