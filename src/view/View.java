@@ -9,6 +9,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import common.EventHandler;
 import common.Pair;
@@ -17,113 +18,161 @@ import common.ViewBase;
 
 public class View implements ViewBase{
 	Frame frame = new Frame();
-	int status = 0;
-	Label statistics = new Label();
-	Label info = new Label();
-	public Container main = new Container();
+	Label statistics = new Label();//in frame
+	Label info = new Label();//in frame
+	String storyteller = null;
+	//cards
 	ArrayList<Image> images = new ArrayList<Image>();
 	ArrayList<Rectangle> positions = new ArrayList<Rectangle>();
-	Label label;
-
-	//
+	Container main = new Container();
+	//stat
+	Container stat = new Container();
+	ArrayList<Label> user = new ArrayList<Label>();
+	ArrayList<Label> score = new ArrayList<Label>();
+	ArrayList<Image> lastimage = new ArrayList<Image>();
+	//for teller
+	Container teller = new Container();
+	TextField text;
+	int bufImage = 0;
+	
+	//DONE
+	public void setAssociation(String association){
+		info.setText(association);
+	}
+	//DONE
 	public void setOnCardChoosen(EventHandler<Integer> handler) {
-			
-	}
-	//
-	public void cardChosenSuccess() {
-		
-	}
-	//
-	public void cardChosenFailed(String reason) {
-		statistics.setText(reason);
-	}
-	//done(remove unnecessary cards and need to block others)
-	public void setOnCardVote(EventHandler<Integer> handler) {
-		statistics.setText("setOnCardVote");
+		main.setVisible(true);
 		final EventHandler<Integer> thishandler = handler;
+		statistics.setText("Choose your card");
 		for(final Image image : images){
-			MouseListener AL = new MouseListener() { 
-				public void mouseClicked(MouseEvent arg0) {
-					//thishandler.apply(image.getid());
-					statistics.setText(""+image.getid());
-				}
-				public void mouseEntered(MouseEvent arg0) {
-				}
-				public void mouseExited(MouseEvent arg0) {
-				}
-				public void mousePressed(MouseEvent arg0) {
-				}
-				public void mouseReleased(MouseEvent arg0) {
-				}
-			};
-			image.AddList(AL);
+			if(image.getid() >= 0){
+				MouseListener AL = new MouseListener() { 
+					public void mouseClicked(MouseEvent arg0) {
+						int id = image.getid();
+						//thishandler.apply(id);						
+						bufImage = id;
+						id++;
+						info.setText("You choose " + id + " image.");						
+					}
+					public void mouseEntered(MouseEvent arg0) {
+					}
+					public void mouseExited(MouseEvent arg0) {
+					}
+					public void mousePressed(MouseEvent arg0) {
+					}
+					public void mouseReleased(MouseEvent arg0) {
+					}
+				};
+				image.AddList(AL);
+			}			
 		}	
-		
 	}
-	//done
-	public void cardVoteSuccess() {
+	//DONE
+	public void cardChosenSuccess() {
 		statistics.setText("CardVoteSuccess");
-		info.setText(null);
 		for(Image image : images){
 			image.removeAL();
 		}
-		main.setVisible(false);
+		addImage(bufImage);
 	}
-	//done - write in statistics
+	//DONE
+	public void cardChosenFailed(String reason) {
+		statistics.setText(reason);
+	}
+	//DONE
+	public void setOnCardVote(EventHandler<Integer> handler) {
+		main.setVisible(true);
+		final EventHandler<Integer> thishandler = handler;
+		statistics.setText("Choose your card");
+		for(final Image image : images){
+			if(image.getid() >= 0){
+				MouseListener AL = new MouseListener() { 
+					public void mouseClicked(MouseEvent arg0) {
+						int id = image.getid();
+						//thishandler.apply(id);						
+						bufImage = id;
+						id++;
+						info.setText("You choose " + id + " image.");						
+					}
+					public void mouseEntered(MouseEvent arg0) {
+					}
+					public void mouseExited(MouseEvent arg0) {
+					}
+					public void mousePressed(MouseEvent arg0) {
+					}
+					public void mouseReleased(MouseEvent arg0) {
+					}
+				};
+				image.AddList(AL);
+			}			
+		}
+	}
+	//DONE
+	public void cardVoteSuccess() {
+		statistics.setText("CardVoteSuccess");
+		for(Image image : images){
+			image.removeAL();
+		}
+		addImage(bufImage);
+	}
+	//DONE
 	public void cardVoteFailed(String reason) {
 		statistics.setText(reason);
 	}
-	//done
+	//DONE
 	@Override
 	public void setOnAssociationChoosen(
 			EventHandler<Pair<String, Integer>> handler) {
 		main.setVisible(true);
 		final EventHandler<Pair<String, Integer>> thishandler = handler;
 		info.setText("Choose your card and set your association");
-		label = new Label("ASSOCIATION:");
-		label.setAlignment(Label.CENTER);
-		final TextField text = new TextField();
-		label.setBounds(750, 0, 100, 30);
-		text.setBounds(750, 40, 100, 30);
-		main.add(label);
-		main.add(text);
+		teller.setVisible(true);
 		for(final Image image : images){
-			MouseListener AL = new MouseListener() { 
-				public void mouseClicked(MouseEvent arg0) {
-					int id = image.getid();
-					String str = text.getText();
-					info.setText("you choose " + image.getid() + " image. Your association is " + str);
-					//thishandler.apply(str,id);
-				}
-				public void mouseEntered(MouseEvent arg0) {
-				}
-				public void mouseExited(MouseEvent arg0) {
-				}
-				public void mousePressed(MouseEvent arg0) {
-				}
-				public void mouseReleased(MouseEvent arg0) {
-				}
-			};
-			image.AddList(AL);
+			if(image.getid() > 0){
+				MouseListener AL = new MouseListener() { 
+					public void mouseClicked(MouseEvent arg0) {
+						String str = text.getText();
+						if(str.equals("")){
+							info.setText("SET ASSOCIATION:");
+						}
+						else{
+							int id = image.getid();
+							bufImage = id;
+							id++;
+							info.setText("You choose " + id + " image. Your association is " + str);
+							//thishandler.apply(str,id);
+						}
+					}
+					public void mouseEntered(MouseEvent arg0) {
+					}
+					public void mouseExited(MouseEvent arg0) {
+					}
+					public void mousePressed(MouseEvent arg0) {
+					}
+					public void mouseReleased(MouseEvent arg0) {
+					}
+				};
+				image.AddList(AL);
+			}			
 		}	
 	}
-	//done
+	//DONE
 	public void associationChoosenSuccess() {
 		info.setText("WAIT");
 		statistics.setText("associationChoosenSuccess");
 		for(Image image : images){
 			image.removeAL();
 		}
-		main.remove(7);
-		main.remove(7);
-		main.setVisible(false);
+		teller.setVisible(false);
+		addImage(bufImage);
+		//main.setVisible(false);
 	}
-	//done
+	//DONE
 	@Override
 	public void associateChoosenFailed(String reason) {
 		statistics.setText(reason);
 	}
-	//done
+	//DONE
 	@Override
 	public void setOnConnectRequire(
 			EventHandler<Triplet<String, Integer, String>> handler) {
@@ -168,14 +217,35 @@ public class View implements ViewBase{
 		statistics.setBounds(0,frame.getHeight()-25,frame.getWidth(),20);
 		
 	}
-	//done
+	//DONE
 	public void connectionSuccess(){
-		frame.remove(1);
-		statistics.setText("success:wait");
-		String path = "img/loginback.png";//loginback
-		Help.background(frame, path);
+		frame.removeAll();
+		frame.setLayout(null);		
+		frame.addWindowListener(new WindowAdapter(){
+			  public void windowClosing(WindowEvent we){
+			    System.exit(0);
+			  }
+			});		
+		Image l = new Image("img/back.jpg");
+		Dimension ScreenSize = new Dimension();
+		ScreenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		Dimension ImageSize = new Dimension();
+		ImageSize = l.getDimension();
+		frame.setBounds(
+				(int)ScreenSize.getWidth()/2-(int)ImageSize.getWidth()/2,
+				(int)ScreenSize.getHeight()/2-(int)ImageSize.getHeight()/2,
+				(int)ImageSize.getWidth(),
+				(int)ImageSize.getHeight()
+				);		
+		frame.setVisible(true);
+		frame.repaint();
+		addStat();
+		addInfo();
+		addImages();
+		addSetAssociation();
+
 	}
-	//done - write in statistic
+	//DONE
 	public void connectionFailed(String reason) {
 		statistics.setText(reason);
 	}
@@ -204,35 +274,11 @@ public class View implements ViewBase{
 	public void showError(String message) {
 		statistics.setText("Error:" + message);
 	}
-	//done NEW METOD - open window
-	public void openGameWindow(){
-		frame.setLayout(null);		
-		frame.addWindowListener(new WindowAdapter(){
-			  public void windowClosing(WindowEvent we){
-			    System.exit(0);
-			  }
-			});		
-		Image l = new Image("img/back.jpg");
-		Dimension ScreenSize = new Dimension();
-		ScreenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		Dimension ImageSize = new Dimension();
-		ImageSize = l.getDimension();
-		frame.setBounds(
-				(int)ScreenSize.getWidth()/2-(int)ImageSize.getWidth()/2,
-				(int)ScreenSize.getHeight()/2-(int)ImageSize.getHeight()/2,
-				(int)ImageSize.getWidth(),
-				(int)ImageSize.getHeight()
-				);		
-		frame.setVisible(true);
-		add();
-		
-	}
-	//done - update cards
+	//DONE
 	public void showCardsToVote(ArrayList<Integer> cards) {
-		addImages(cards);frame.repaint();
-		//frame.add(new Image("img/back.jpg"));
+		addImages(cards);
 	}
-	//done - update cards
+	//DONE
 	public void showSelfCards(ArrayList<Integer> cards) {
 		addImages(cards);	
 	}
@@ -257,7 +303,9 @@ public class View implements ViewBase{
 	//
 	@Override
 	public void showStats(HashMap<String, Integer> stats) {
-		// TODO Auto-generated method stub
+		stat.setVisible(true);
+		for (Map.Entry<String, Integer> entry: stats.entrySet())
+		    System.out.println(entry.getKey() + " = " + entry.getValue());
 		
 	}
 	//
@@ -266,9 +314,10 @@ public class View implements ViewBase{
 		// TODO Auto-generated method stub
 		
 	}
-	//done (write in info)
+	//DONE (write in info)
 	public void showStoryTeller(String nick) {
 		info.setText("Today " + nick + " is teller");
+		storyteller = nick;
 	}
 	//
 	@Override
@@ -279,75 +328,100 @@ public class View implements ViewBase{
 	/************************************************************************
 	***************************HELPER_FUNCTIONS******************************
 	************************************************************************/
+	
 	private void addImages(ArrayList<Integer> nums){
 		main.setVisible(true);
-		if(images.size() == 0){
-			int i = 0;
-			for (int num: nums){
-				Image image = new Image(generatePath(num), positions.get(i),num);
-				images.add(image);
-				main.add(image);
-				i++;
-			}
+		int i = 0;
+		for(i = 0; i < nums.size(); i ++){
+			images.get(i).repaint(generatePath(nums.get(i)),i);
 		}
-		else{
-			int i = 0;
-			for(i = 0; i < nums.size(); i ++){
-				images.get(i).repaint(generatePath(nums.get(i)));
-			}
-			for(i = nums.size(); i < images.size(); i++){
-				images.get(i).repaint(generatePath(0));
-			}
+		for(i = nums.size(); i < images.size(); i++){
+			images.get(i).repaint(generatePath(0),-1);
 		}
 	}
 	
-	private void AddListenerImage(){
-		for(Image image : images){
-			MouseListener AL = new MouseListener() { 
-				public void mouseClicked(MouseEvent arg0) {
-				}
-				public void mouseEntered(MouseEvent arg0) {
-				}
-				public void mouseExited(MouseEvent arg0) {
-				}
-				public void mousePressed(MouseEvent arg0) {
-				}
-				public void mouseReleased(MouseEvent arg0) {
-				}
-			};
-			image.AddList(AL);
-		}
+	private void addImage(int place){
+		images.get(place).repaint(generatePath(0),-1);
 	}
-
+	
+	private void addImage(int path, int place){
+		images.get(place).repaint(generatePath(path), path);
+	}
+	
 	private String generatePath(int num){
 		return "img/" + num + ".png";
 	}
 	
-	private void add(){
-		//statisctic bar - 0
-		statistics.setBounds(0,575,1200,20);//0
-		statistics.setAlignment(Label.CENTER);
-		statistics.setBackground(new Color(168, 189, 217));
-		frame.add(statistics);
-		
-		//info bar - first 
-		info.setBounds(0,25,1200,40);//1
-		info.setAlignment(Label.CENTER);
-		info.setBackground(new Color(168, 189, 217));
-		frame.add(info);
-		
-		//set positions for cards
+	private void addSetAssociation(){
+		frame.add(teller);
+		teller.setBounds(940, 70, 140, 500);
+		Label label = new Label("ASSOCIATION:"); 
+		label.setAlignment(Label.CENTER);
+		text = new TextField();
+		teller.add(text);
+		teller.add(label);
+		label.setBounds(20, 0, 100, 30);
+		text.setBounds(20, 50, 100, 30);
+		teller.setVisible(false);
+	}
+	
+	private void addImages(){//images in main container
+		main.setBounds(200, 70, 730, 500);
+		frame.add(main);
 		positions.add(new Rectangle(0, 0, 160, 240));
 		positions.add(new Rectangle(190, 0, 160, 240));
 		positions.add(new Rectangle(380, 0, 160, 240));
 		positions.add(new Rectangle(570, 0, 160, 240));
 		positions.add(new Rectangle(90, 250, 160, 240));
 		positions.add(new Rectangle(280, 250, 160, 240));
-		positions.add(new Rectangle(470, 250, 160, 240));	
-
-		//add main part for cards - second
-		frame.add(main);
-		main.setBounds(200, 70, 1000, 600);
+		positions.add(new Rectangle(470, 250, 160, 240));
+		for(int i = 0; i < 7; i++){
+			Image im = new Image(positions.get(i));
+			images.add(im);
+			main.add(im);
+		}
 		
+	}
+
+	private void addInfo(){ //info and statistics in frame
+		//statisctic bar - 0
+		statistics.setBounds(0,575,1200,20);//0
+		statistics.setAlignment(Label.CENTER);
+		statistics.setBackground(new Color(168, 189, 217));
+		frame.add(statistics);
+				
+		//info bar - first 
+		info.setBounds(0,25,1200,40);//1
+		info.setAlignment(Label.CENTER);
+		info.setBackground(new Color(168, 189, 217));
+		frame.add(info);
+	}
+	
+	private void addStat(){//info about last game(user,score,lastimage) in stat container
+		stat.setBounds(20, 70, 170, 500);
+		frame.add(stat);
+		int x = 0;
+		for(int i = 0; i < 4; i++){
+			Label userlabel = new Label("user:");
+			Label scorelabel = new Label("score:");
+			
+			userlabel.setBackground(Color.yellow);//user
+			scorelabel.setBackground(Color.green);//score
+			
+			userlabel.setBounds(0, x, 90, 20);
+			Image imagelabel = new Image(100, x,70, 105);
+			scorelabel.setBounds(0, x+25, 90, 20);
+			
+			user.add(userlabel);
+			score.add(scorelabel);
+			lastimage.add(imagelabel);
+			
+			stat.add(userlabel);
+			stat.add(scorelabel);
+			stat.add(imagelabel);
+			
+			x = x + 120;
+		}
+		stat.setVisible(false);
 	}
 }

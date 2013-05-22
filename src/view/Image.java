@@ -17,7 +17,8 @@ public class Image extends Component {
     public void paint(Graphics g) {
         g.drawImage(img, 0, 0, null);
     } 
-    public void repaint(String s){
+    public void repaint(String s, int id){
+    	this.id = id;
     	Graphics g = this.getGraphics();
     	try {
             img = ImageIO.read(new File(s));
@@ -25,6 +26,14 @@ public class Image extends Component {
         } catch (IOException e) {
         } 
     	g.drawImage(img, 0, 0, null);
+    }
+    
+    public Image(int a, int b, int c, int d){
+    	rect = new Rectangle(a, b, c, d);
+    }
+
+    public Image(Rectangle r){
+    	rect = r;
     }
     
     public Image(String s, int a, int b) {
@@ -97,7 +106,8 @@ public class Image extends Component {
     public Dimension getDimension(){
     	return new Dimension(img.getWidth(null), img.getHeight(null));
     }
-	public void removeAL() {
+	
+    public void removeAL() {
 		removeMouseListener(AL);
 	}
     
