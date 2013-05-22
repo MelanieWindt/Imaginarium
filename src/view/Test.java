@@ -129,7 +129,7 @@ public class Test {
 		}
 		v.setOnCardChoosen(null);
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(7000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -141,6 +141,27 @@ public class Test {
 		hashmap.put("alina", 3);
 		hashmap.put("lllll", 4);
 		v.showStats(hashmap);
+		HashMap<String, Integer> hashmap1 = new HashMap<String, Integer>();
+		hashmap1.put("ellie", 5);
+		hashmap1.put("alex", 6);
+		hashmap1.put("alina", 7);
+		hashmap1.put("lllll", 8);
+		v.showSelection(hashmap1);
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		v.showStats(hashmap1);
+		v.showSelection(hashmap);
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		v.gameEnd(hashmap);
 		
 	}
 

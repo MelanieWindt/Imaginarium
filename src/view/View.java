@@ -300,30 +300,44 @@ public class View implements ViewBase{
 		// TODO Auto-generated method stub
 		
 	}
-	//
-	@Override
+	//DONE
 	public void showStats(HashMap<String, Integer> stats) {
 		stat.setVisible(true);
+		int i = 0;
 		for (Map.Entry<String, Integer> entry: stats.entrySet())
-		    System.out.println(entry.getKey() + " = " + entry.getValue());
-		
+		{
+			user.get(i).setText("user:" + entry.getKey());
+			score.get(i).setText("score:" + entry.getValue());
+			i++;
+		}
 	}
-	//
-	@Override
+	//DONE
 	public void showSelection(HashMap<String, Integer> selection) {
-		// TODO Auto-generated method stub
-		
+		stat.setVisible(true);
+		int i = 0;
+		for (Map.Entry<String, Integer> entry: selection.entrySet())
+		{
+			lastimage.get(i).repaint(generatePath(entry.getValue()), entry.getValue());
+			i++;
+		}
 	}
 	//DONE (write in info)
 	public void showStoryTeller(String nick) {
 		info.setText("Today " + nick + " is teller");
 		storyteller = nick;
 	}
-	//
-	@Override
+	//DONE
 	public void gameEnd(HashMap<String, Integer> stats) {
-		// TODO Auto-generated method stub
-		
+		main.setVisible(false);
+		int i = 0;
+		info.setText("THE END");
+		for (Map.Entry<String, Integer> entry: stats.entrySet())
+		{
+			user.get(i).setText("user:" + entry.getKey());
+			score.get(i).setText("score:" + entry.getValue());
+			lastimage.get(i).repaint(generatePath(0), -1);
+			i++;			
+		}
 	}
 	/************************************************************************
 	***************************HELPER_FUNCTIONS******************************
@@ -405,8 +419,8 @@ public class View implements ViewBase{
 			Label userlabel = new Label("user:");
 			Label scorelabel = new Label("score:");
 			
-			userlabel.setBackground(Color.yellow);//user
-			scorelabel.setBackground(Color.green);//score
+			userlabel.setBackground(new Color(168, 189, 217));//user
+			scorelabel.setBackground(new Color(168, 189, 217));//score
 			
 			userlabel.setBounds(0, x, 90, 20);
 			Image imagelabel = new Image(100, x,70, 105);
