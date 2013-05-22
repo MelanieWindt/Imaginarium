@@ -52,7 +52,7 @@ public class Test {
 		list.add(5);
 		list.add(6);
 		list.add(7);
-		view.openGameWindow();
+		//view.openGameWindow();
 		list1.add(7);
 		list1.add(7);
 		list1.add(7);
