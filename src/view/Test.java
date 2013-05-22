@@ -98,20 +98,20 @@ public class Test {
 	
 	public static void main(String[] args) {
 		ArrayList<Integer> list = new ArrayList<Integer>();
-		list.add(1);
-		list.add(2);
-		list.add(3);
-		list.add(4);
-		list.add(5);
-		list.add(6);
+		list.add(81);
+		list.add(82);
+		list.add(83);
+		list.add(84);
+		list.add(85);
+		list.add(85);
 		//list.add(7);
 		ArrayList<Integer> list1 = new ArrayList<Integer>();
-		list1.add(7);
-		list1.add(7);
-		list1.add(7);
-		list1.add(7);
-		list1.add(8);
-		list1.add(8);
+		list1.add(77);
+		list1.add(77);
+		list1.add(77);
+		list1.add(77);
+		list1.add(78);
+		list1.add(78);
 		View v = new View();
 		v.connectionSuccess();
 		try {
@@ -148,7 +148,7 @@ public class Test {
 		hashmap1.put("lllll", 8);
 		v.showSelection(hashmap1);
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(5000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -161,7 +161,7 @@ public class Test {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		v.gameEnd(hashmap);
+		//v.gameEnd(hashmap);
 		
 	}
 

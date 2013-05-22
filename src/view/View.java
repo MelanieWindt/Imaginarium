@@ -17,6 +17,7 @@ import common.Triplet;
 import common.ViewBase;
 
 public class View implements ViewBase{
+	//image size is 160 x 240
 	Frame frame = new Frame();
 	Label statistics = new Label();//in frame
 	Label info = new Label();//in frame
@@ -226,14 +227,12 @@ public class View implements ViewBase{
 			    System.exit(0);
 			  }
 			});		
-		Image l = new Image("img/back.jpg");
 		Dimension ScreenSize = new Dimension();
 		ScreenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		Dimension ImageSize = new Dimension();
-		ImageSize = l.getDimension();
+		Dimension ImageSize = new Dimension(1200,600);
 		frame.setBounds(
-				(int)ScreenSize.getWidth()/2-(int)ImageSize.getWidth()/2,
-				(int)ScreenSize.getHeight()/2-(int)ImageSize.getHeight()/2,
+				(int)ScreenSize.getWidth()/2-600,
+				(int)ScreenSize.getHeight()/2-300,
 				(int)ImageSize.getWidth(),
 				(int)ImageSize.getHeight()
 				);		
@@ -243,7 +242,6 @@ public class View implements ViewBase{
 		addInfo();
 		addImages();
 		addSetAssociation();
-
 	}
 	//DONE
 	public void connectionFailed(String reason) {
@@ -276,7 +274,7 @@ public class View implements ViewBase{
 	}
 	//DONE
 	public void showCardsToVote(ArrayList<Integer> cards) {
-		addImages(cards);
+		addImages(cards);//327491
 	}
 	//DONE
 	public void showSelfCards(ArrayList<Integer> cards) {
@@ -353,7 +351,6 @@ public class View implements ViewBase{
 			images.get(i).repaint(generatePath(0),-1);
 		}
 	}
-	
 	private void addImage(int place){
 		images.get(place).repaint(generatePath(0),-1);
 	}
@@ -423,7 +420,8 @@ public class View implements ViewBase{
 			scorelabel.setBackground(new Color(168, 189, 217));//score
 			
 			userlabel.setBounds(0, x, 90, 20);
-			Image imagelabel = new Image(100, x,70, 105);
+			Image imagelabel = new Image(100, x,70, 105, 1);
+			imagelabel.repaint();
 			scorelabel.setBounds(0, x+25, 90, 20);
 			
 			user.add(userlabel);

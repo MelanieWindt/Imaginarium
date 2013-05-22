@@ -13,20 +13,9 @@ public class Image extends Component {
 	private int id = 0;
 	Rectangle rect =  null;
 	MouseListener AL = null;
+	int size = 0;
  
-    public void paint(Graphics g) {
-        g.drawImage(img, 0, 0, null);
-    } 
-    public void repaint(String s, int id){
-    	this.id = id;
-    	Graphics g = this.getGraphics();
-    	try {
-            img = ImageIO.read(new File(s));
-            setBounds(rect);
-        } catch (IOException e) {
-        } 
-    	g.drawImage(img, 0, 0, null);
-    }
+   
     
     public Image(int a, int b, int c, int d){
     	rect = new Rectangle(a, b, c, d);
@@ -99,7 +88,11 @@ public class Image extends Component {
         } 
      } 
     
-    public int getid(){
+    public Image(int a, int b, int c, int d, int size) {
+    	this.size = size;
+    	rect = new Rectangle(a, b, c, d);
+	}
+	public int getid(){
     	return id;
     }
     
@@ -110,5 +103,31 @@ public class Image extends Component {
     public void removeAL() {
 		removeMouseListener(AL);
 	}
+    public void paint(Graphics g) {
+        //327491
+    	//g.drawImage(img, 0, 0, null);
+    	if(size == 0){
+    		g.drawImage(img, 0, 0, 160, 240, 0, 0, 327, 491 ,null);
+    	}
+    	if(size == 1){
+    		g.drawImage(img, 0, 0, 160, 240, 0, 0, 327, 491 ,null);
+    	}
+    } 
+    public void repaint(String s, int id){
+    	this.id = id;
+    	Graphics g = this.getGraphics();
+    	try {
+            img = ImageIO.read(new File(s));
+            setBounds(rect);
+        } catch (IOException e) {
+        } 
+    	if(size == 0){
+    		g.drawImage(img, 0, 0, 160, 240, 0, 0, 327, 491 ,null);
+    	}
+    	if(size == 1){
+    		g.drawImage(img, 0, 0, 70, 105, 0, 0, 327, 491 ,null);
+    	}
+    }
+	
     
 }
