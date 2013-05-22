@@ -1,4 +1,4 @@
-package common;
+package model;
 
 public enum GamePhase {
   CONNECTION,

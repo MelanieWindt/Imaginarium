@@ -132,8 +132,9 @@ public class DummyView implements ViewBase {
         String[] body = arg.split(" ");
         switch (body[0]) {
           case "connect" : self.connectionReq.apply(new Triplet<>(body[1], Integer.parseInt(body[2]), body[3])); break;
-          case "choose" : self.cardChoosen.apply(Integer.parseInt(body[1])); break;
-          case "story" : self.associationChoosen.apply(new Pair<>(body[1], Integer.parseInt(body[2])));
+          case "choice" : self.cardChoosen.apply(Integer.parseInt(body[1])); break;
+          case "story" : self.associationChoosen.apply(new Pair<>(body[1], Integer.parseInt(body[2]))); break;
+          case "vote" : self.cardVote.apply(Integer.parseInt(body[1])); break;
           default : System.out.println("Unknown command: try again");
         }
       } catch (Exception e) {

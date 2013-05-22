@@ -38,7 +38,7 @@ public class Client {
 	public void setScores (int [] scores){
 		this.scores = scores;
 	}
-	
+
 	public void addCurrent (int a) {
 		current.add(a);
 	}

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class Player {
 	private String nick;
-	private boolean busy;
-	private ArrayList<Integer> cards;  
+	private boolean busy = false;
+	private ArrayList<Integer> cards = new ArrayList<>();
 	private int chosen; 
 	private int score; 
 	
@@ -13,9 +13,13 @@ public class Player {
 		return (busy);
 	}
 	
-	public void switchBusy () {
-		this.busy = !this.busy;
+	public void toBusy () {
+		this.busy = true;
 	}
+
+    public void toFree() {
+      this.busy = false;
+    }
 	
 	public void setNick (String nick){
 		this.nick = nick;
@@ -24,10 +28,18 @@ public class Player {
 	public String getNick () {
 		return nick;
 	}
+
+    public ArrayList<Integer> getDeck() {
+      return this.cards;
+    }
 	
 	public void removeCard (int card) {
 		cards.remove(cards.indexOf(card));
-	} 
+	}
+
+    public boolean hasCard(int card) {
+      return this.cards.contains(card);
+    }
 	
 	public void addCard (int a) {
 		cards.add (a) ;
@@ -42,15 +54,12 @@ public class Player {
 	} 
 	
 	public void setChosen (int a) throws Exception  {
-		if (!busy) {
+		if (busy) {
 			throw new Exception("You cannot choose now");
 		} 
 		chosen = a;
 	}
 	public int getChosen () throws Exception{
-		if (busy) {
-			throw new Exception ("Haven't chosen yet") ;
-		}
-		return chosen;
+	  return chosen;
 	}
 }
