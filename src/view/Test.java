@@ -52,7 +52,6 @@ public class Test {
 		list.add(5);
 		list.add(6);
 		list.add(7);
-		view.openGameWindow();
 		list1.add(7);
 		list1.add(7);
 		list1.add(7);
@@ -60,15 +59,21 @@ public class Test {
 		list1.add(1);
 		list1.add(1);
 		view.showCardsToVote(list);
-		view.setOnAssociationChoosen(null);
 		try {
 			Thread.sleep(3000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		view.associationChoosenSuccess();
-		view.setOnCardVote(null);
+		view.setOnAssociationChoosen(null);
+		try {
+			Thread.sleep(9000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//view.associationChoosenSuccess();
+		//view.setOnCardVote(null);
 		try {
 			Thread.sleep(3000);
 		} catch (InterruptedException e) {
@@ -97,6 +102,8 @@ public class Test {
 	}
 	
 	public static void main(String[] args) {
+		
+	    
 		ArrayList<Integer> list = new ArrayList<Integer>();
 		list.add(81);
 		list.add(82);
@@ -113,7 +120,42 @@ public class Test {
 		list1.add(78);
 		list1.add(78);
 		View v = new View();
+		v.setOnConnectRequire(null);
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		v.connectionSuccess();
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		v.showCardsToVote(list1);
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    v.setOnAssociationChoosen(null);
+	    try {
+			Thread.sleep(9000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    v.setOnCardChoosen(null);
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		v.cardChosenSuccess();
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
@@ -127,20 +169,20 @@ public class Test {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		v.setOnCardChoosen(null);
+		v.setOnAssociationChoosen(null);
 		try {
 			Thread.sleep(7000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		v.cardChosenSuccess();
+		//v.cardChosenSuccess();
 		HashMap<String, Integer> hashmap = new HashMap<String, Integer>();
 		hashmap.put("ellie", 1);
 		hashmap.put("alex", 2);
 		hashmap.put("alina", 3);
 		hashmap.put("lllll", 4);
-		v.showStats(hashmap);
+		//v.showStats(hashmap);
 		HashMap<String, Integer> hashmap1 = new HashMap<String, Integer>();
 		hashmap1.put("ellie", 5);
 		hashmap1.put("alex", 6);

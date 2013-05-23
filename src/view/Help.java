@@ -12,7 +12,7 @@ public class Help{
 			  }
 			});		
 		Image l = new Image(path);
-		frame.add(l);
+		//frame.add(l);
 		Dimension ScreenSize = new Dimension();
 		ScreenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Dimension ImageSize = new Dimension();

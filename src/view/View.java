@@ -32,7 +32,10 @@ public class View implements ViewBase{
 	ArrayList<Label> score = new ArrayList<Label>();
 	ArrayList<Image> lastimage = new ArrayList<Image>();
 	//for teller
+	Button BUTTON = new Button("OK");
+	TextField CARD = new TextField();
 	Container teller = new Container();
+	MouseListener LISTENER1;
 	TextField text;
 	int bufImage = 0;
 	
@@ -43,14 +46,14 @@ public class View implements ViewBase{
 	//DONE
 	public void setOnCardChoosen(EventHandler<Integer> handler) {
 		main.setVisible(true);
-		final EventHandler<Integer> thishandler = handler;
+		System.out.println("setOnCardChoosen");
 		statistics.setText("Choose your card");
 		for(final Image image : images){
 			if(image.getid() >= 0){
 				MouseListener AL = new MouseListener() { 
 					public void mouseClicked(MouseEvent arg0) {
 						int id = image.getid();
-						//thishandler.apply(id);						
+						//handler.apply (id);				
 						bufImage = id;
 						id++;
 						info.setText("You choose " + id + " image.");						
@@ -81,16 +84,16 @@ public class View implements ViewBase{
 		statistics.setText(reason);
 	}
 	//DONE
-	public void setOnCardVote(EventHandler<Integer> handler) {
+	public void setOnCardVote(final EventHandler<Integer> handler) {
 		main.setVisible(true);
-		final EventHandler<Integer> thishandler = handler;
+		System.out.println("setOnCardVote");
 		statistics.setText("Choose your card");
 		for(final Image image : images){
 			if(image.getid() >= 0){
 				MouseListener AL = new MouseListener() { 
 					public void mouseClicked(MouseEvent arg0) {
 						int id = image.getid();
-						//thishandler.apply(id);						
+						handler.apply(id);						
 						bufImage = id;
 						id++;
 						info.setText("You choose " + id + " image.");						
@@ -121,12 +124,13 @@ public class View implements ViewBase{
 		statistics.setText(reason);
 	}
 	//DONE
-	@Override
 	public void setOnAssociationChoosen(
-			EventHandler<Pair<String, Integer>> handler) {
+			final EventHandler<Pair<String, Integer>> handler) {
+		System.out.println("setOnAssociationChoosen");
+		statistics.setText("setOnAssociationChoosen");
+		System.out.println("Association choosen work");
 		main.setVisible(true);
-		final EventHandler<Pair<String, Integer>> thishandler = handler;
-		info.setText("Choose your card and set your association");
+		statistics.setText("Choose your card and set your association");
 		teller.setVisible(true);
 		for(final Image image : images){
 			if(image.getid() > 0){
@@ -137,11 +141,12 @@ public class View implements ViewBase{
 							info.setText("SET ASSOCIATION:");
 						}
 						else{
-							int id = image.getid();
+							Integer id = image.getid();
 							bufImage = id;
 							id++;
+							Pair<String, Integer> p = new Pair<String, Integer>(str, id);
 							info.setText("You choose " + id + " image. Your association is " + str);
-							//thishandler.apply(str,id);
+							handler.apply(p);
 						}
 					}
 					public void mouseEntered(MouseEvent arg0) {
@@ -169,12 +174,10 @@ public class View implements ViewBase{
 		//main.setVisible(false);
 	}
 	//DONE
-	@Override
 	public void associateChoosenFailed(String reason) {
 		statistics.setText(reason);
 	}
 	//DONE
-	@Override
 	public void setOnConnectRequire(
 			EventHandler<Triplet<String, Integer, String>> handler) {
 		final EventHandler<Triplet<String, Integer, String>> Handler;
@@ -185,7 +188,7 @@ public class View implements ViewBase{
 		statistics.setBackground(new Color(168, 189, 217));
 		String path = "img/loginback.png";//loginback
 		final Container container = new Container();
-		final TextField host = new TextField("host");
+		final TextField host = new TextField("localhost");
 		final TextField port = new TextField("port");
 		final TextField login = new TextField("login");
 		final Button button = new Button("OK");
@@ -283,8 +286,7 @@ public class View implements ViewBase{
 	//пока не надо?
 	@Override
 	public void cardChosenRequire(String story) {
-		// TODO Auto-generated method stub
-		
+		info.setText("Please, choose a card");
 	}
 	//пока не надо?
 	@Override
@@ -295,10 +297,13 @@ public class View implements ViewBase{
 	//пока не надо?
 	@Override
 	public void associationRequire() {
-		// TODO Auto-generated method stub
+		info.setText("Please, enter your accosiation");
 		
 	}
 	//DONE
+	public void needVote() {
+		info.setText("Plaese, vote");
+	}
 	public void showStats(HashMap<String, Integer> stats) {
 		stat.setVisible(true);
 		int i = 0;
@@ -321,7 +326,7 @@ public class View implements ViewBase{
 	}
 	//DONE (write in info)
 	public void showStoryTeller(String nick) {
-		info.setText("Today " + nick + " is teller");
+		info.setText("Today " + nick + " is storyteller");
 		storyteller = nick;
 	}
 	//DONE
@@ -340,6 +345,8 @@ public class View implements ViewBase{
 	/************************************************************************
 	***************************HELPER_FUNCTIONS******************************
 	************************************************************************/
+	
+	
 	
 	private void addImages(ArrayList<Integer> nums){
 		main.setVisible(true);
@@ -373,7 +380,11 @@ public class View implements ViewBase{
 		teller.add(label);
 		label.setBounds(20, 0, 100, 30);
 		text.setBounds(20, 50, 100, 30);
-		teller.setVisible(false);
+		CARD.setBounds(20, 100, 100, 30);
+		BUTTON.setBounds(20, 150, 100, 30);
+		teller.add(CARD);
+		teller.add(BUTTON);
+		teller.setVisible(true);
 	}
 	
 	private void addImages(){//images in main container
@@ -434,6 +445,6 @@ public class View implements ViewBase{
 			
 			x = x + 120;
 		}
-		stat.setVisible(false);
+		stat.setVisible(true);
 	}
 }
