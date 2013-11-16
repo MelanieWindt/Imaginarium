@@ -15,8 +15,6 @@ public class Image extends Component {
 	MouseListener AL = null;
 	int size = 0;
 
-
-
 	public Image(int a, int b, int c, int d){
 		rect = new Rectangle(a, b, c, d);
 	}

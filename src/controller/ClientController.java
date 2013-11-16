@@ -18,7 +18,9 @@ public class ClientController {
 	private final EventHandler<String> newMessage = new EventHandler<String>() {
 		public void apply(String arg) {
 			try {
+				System.out.println("Before parse: " + arg);
 				ParsedMessage message = MessageParser.parse(arg);
+				System.out.println("After parse: " + message.type);
 				switch (message.type) {
 				// receive message
 				case "nick" : self.nickResponse(message.body); break;

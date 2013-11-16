@@ -34,7 +34,7 @@ public class View implements ViewBase {
 	//for teller
 	Container teller = new Container();
 	TextField text;
-	int bufImage = 0;
+	int selectedImage = 0;
 	private EventHandler<Integer> onCardChoosen;
 	private EventHandler<Integer> onCardVote;
 	private EventHandler<Pair<String, Integer>> onAssociationChosen;
@@ -58,7 +58,7 @@ public class View implements ViewBase {
 		for(Image image : images){
 			image.removeAL();
 		}
-		addImage(bufImage);		
+		emptyPlace(selectedImage);		
 		statistics.setText("Card choose failed: " + reason);
 	}
 	//DONE
@@ -70,7 +70,7 @@ public class View implements ViewBase {
 		for(Image image : images){
 			image.removeAL();
 		}
-		addImage(bufImage);
+		emptyPlace(selectedImage);
 		statistics.setText("Card vote success");		
 	}
 	//DONE
@@ -85,13 +85,13 @@ public class View implements ViewBase {
 	}
 	//DONE
 	public void associationChoosenSuccess() {
-		info.setText("WAIT");
-		statistics.setText("associationChoosenSuccess");
+		info.setText("Wating for other players to choose their cards");
+		statistics.setText("Your association has been sent to other players");
 		for(Image image : images){
 			image.removeAL();
 		}
 		teller.setVisible(false);
-		addImage(bufImage);
+		emptyPlace(selectedImage);
 		//main.setVisible(false);
 	}
 	//DONE
@@ -207,15 +207,18 @@ public class View implements ViewBase {
 	public void cardChosenRequire(String story) {
 		main.setVisible(true);
 		final EventHandler<Integer> thishandler = this.onCardChoosen;
-		statistics.setText("Choose your card on teller story: " + story);
-		for(final Image image : images){
-			if(image.getid() >= 0){
+		info.setText("Choose your card on teller story: " + story);
+		statistics.setText("");
+		for(int ord = 0; ord < images.size(); ord++){
+			final Image image = images.get(ord);
+			final int id = image.getid();
+			final int ford = ord;
+			if(id >= 0){
 				MouseListener AL = new MouseListener() { 
-					public void mouseClicked(MouseEvent arg0) {
-						int id = image.getid();
+					public void mouseClicked(MouseEvent arg0) {					
 						thishandler.apply(id);	
-						bufImage = id;
-						info.setText("You've chosen " + id + " image.");						
+						selectedImage = ford;
+						info.setText("You've chosen an image.");						
 					}
 					public void mouseEntered(MouseEvent arg0) {
 					}
@@ -235,15 +238,17 @@ public class View implements ViewBase {
 	public void cardVoteRequire() {
 		main.setVisible(true);
 		final EventHandler<Integer> thishandler = onCardVote;
-		statistics.setText("Choose your card");
-		for(final Image image : images) {
-			if(image.getid() >= 0){
-				MouseListener AL = new MouseListener() { 
-					public void mouseClicked(MouseEvent arg0) {
-						int id = image.getid();
+		info.setText("Vote for a card");
+		for(int ord = 0; ord < images.size(); ord++){
+			final Image image = images.get(ord);
+			final int id = image.getid();
+			final int ford = ord;
+			if (id >= 0) {
+				MouseListener AL = new MouseListener() {
+					public void mouseClicked(MouseEvent arg0) {						
 						thishandler.apply(id);						
-						bufImage = id;
-						info.setText("You choose image #" + id + ".");						
+						selectedImage = ford;
+						statistics.setText("You've voted for image");						
 					}
 					public void mouseEntered(MouseEvent arg0) {
 					}
@@ -263,20 +268,21 @@ public class View implements ViewBase {
 	public void associationRequire() {
 		main.setVisible(true);
 		final EventHandler<Pair<String, Integer>> thishandler = onAssociationChosen;
-		info.setText("Choose your card and set your association");
+		info.setText("Enter your association and choose a card");
 		teller.setVisible(true);
-		for(final Image image : images){
-			if(image.getid() > 0){
+		for(int ord = 0; ord < images.size(); ord++){
+			final Image image = images.get(ord);
+			final int id = image.getid();
+			final int ford = ord;
+			if(id >= 0) {
 				MouseListener AL = new MouseListener() { 
 					public void mouseClicked(MouseEvent arg0) {
 						String str = text.getText();
-						if(str.equals("")){
+						if(str.equals("")) {
 							info.setText("Please, enter association first!");
-						}
-						else {
-							int id = image.getid();
-							bufImage = id;
-							info.setText("You've chosen " + id + " image. Your association is " + str);
+						} else {
+							selectedImage = ford;
+							info.setText("You've chosen an image. Your association is " + str);
 							text.setText("");
 							thishandler.apply(new Pair<>(str, id));
 						}
@@ -325,36 +331,42 @@ public class View implements ViewBase {
 	public void gameEnd(HashMap<String, Integer> stats) {
 		main.setVisible(false);
 		int i = 0;
-		info.setText("THE END");
+		info.setText("The game has ended");
 		for (Map.Entry<String, Integer> entry: stats.entrySet())
 		{
 			user.get(i).setText("user:" + entry.getKey());
 			score.get(i).setText("score:" + entry.getValue());
-			lastimage.get(i).repaint(generatePath(0), -1);
+			lastimage.get(i).repaint(generatePath(), -1);
 			i++;			
 		}
 	}
 	/************************************************************************
-	 ***************************HELPER_FUNCTIONS******************************
+	 ***************************HELPER_FUNCTIONS*****************************
 	 ************************************************************************/
 
 	private void addImages(ArrayList<Integer> nums){
 		main.setVisible(true);
+		System.out.println("Total cards: " + nums.size());
+		System.out.println("Total cards: " + images.size());
 		int i = 0;
-		for(i = 0; i < nums.size(); i ++){
+		for(i = 0; i < nums.size(); i++){
 			int id = nums.get(i);
 			images.get(i).repaint(generatePath(id), id);
 		}
-		for(i = nums.size(); i < images.size(); i++){
-			images.get(i).repaint(generatePath(0),-1);
-		}
+		for(i = nums.size(); i < images.size(); i++)
+			emptyPlace(i);
 	}
-	private void addImage(int place){
-		images.get(place).repaint(generatePath(0),-1);
+	
+	private void emptyPlace(int place){
+		images.get(place).repaint(generatePath(),-1);
 	}
 
+	private String generatePath(){
+		return generatePath(-1);
+	}	
+	
 	private String generatePath(int num){
-		return "img/" + num + ".png";
+		return "img/" + (num + 1) + ".png";
 	}
 
 	private void addSetAssociation(){
