@@ -16,7 +16,7 @@ import common.Pair;
 import common.Triplet;
 import common.ViewBase;
 
-public class View implements ViewBase{
+public class View implements ViewBase {
 	//image size is 160 x 240
 	Frame frame = new Frame();
 	Label statistics = new Label();//in frame
@@ -35,127 +35,53 @@ public class View implements ViewBase{
 	Container teller = new Container();
 	TextField text;
 	int bufImage = 0;
-	
+	private EventHandler<Integer> onCardChoosen;
+	private EventHandler<Integer> onCardVote;
+	private EventHandler<Pair<String, Integer>> onAssociationChosen;
+	private EventHandler<Integer> onClose;
+
 	//DONE
 	public void setAssociation(String association){
 		info.setText(association);
 	}
 	//DONE
 	public void setOnCardChoosen(EventHandler<Integer> handler) {
-		main.setVisible(true);
-		final EventHandler<Integer> thishandler = handler;
-		statistics.setText("Choose your card");
-		for(final Image image : images){
-			if(image.getid() >= 0){
-				MouseListener AL = new MouseListener() { 
-					public void mouseClicked(MouseEvent arg0) {
-						int id = image.getid();
-						//thishandler.apply(id);						
-						bufImage = id;
-						id++;
-						info.setText("You choose " + id + " image.");						
-					}
-					public void mouseEntered(MouseEvent arg0) {
-					}
-					public void mouseExited(MouseEvent arg0) {
-					}
-					public void mousePressed(MouseEvent arg0) {
-					}
-					public void mouseReleased(MouseEvent arg0) {
-					}
-				};
-				image.AddList(AL);
-			}			
-		}	
+		this.onCardChoosen = handler;
 	}
 	//DONE
 	public void cardChosenSuccess() {
-		statistics.setText("CardVoteSuccess");
-		for(Image image : images){
-			image.removeAL();
-		}
-		addImage(bufImage);
+		statistics.setText("Card chosen");
 	}
 	//DONE
 	public void cardChosenFailed(String reason) {
-		statistics.setText(reason);
-	}
-	//DONE
-	public void setOnCardVote(EventHandler<Integer> handler) {
-		main.setVisible(true);
-		final EventHandler<Integer> thishandler = handler;
-		statistics.setText("Choose your card");
-		for(final Image image : images){
-			if(image.getid() >= 0){
-				MouseListener AL = new MouseListener() { 
-					public void mouseClicked(MouseEvent arg0) {
-						int id = image.getid();
-						//thishandler.apply(id);						
-						bufImage = id;
-						id++;
-						info.setText("You choose " + id + " image.");						
-					}
-					public void mouseEntered(MouseEvent arg0) {
-					}
-					public void mouseExited(MouseEvent arg0) {
-					}
-					public void mousePressed(MouseEvent arg0) {
-					}
-					public void mouseReleased(MouseEvent arg0) {
-					}
-				};
-				image.AddList(AL);
-			}			
-		}
-	}
-	//DONE
-	public void cardVoteSuccess() {
 		statistics.setText("CardVoteSuccess");
 		for(Image image : images){
 			image.removeAL();
 		}
+		addImage(bufImage);		
+		statistics.setText("Card choose failed: " + reason);
+	}
+	//DONE
+	public void setOnCardVote(EventHandler<Integer> handler) {
+		this.onCardVote = handler;
+	}
+	//DONE
+	public void cardVoteSuccess() {
+		for(Image image : images){
+			image.removeAL();
+		}
 		addImage(bufImage);
+		statistics.setText("Card vote success");		
 	}
 	//DONE
 	public void cardVoteFailed(String reason) {
-		statistics.setText(reason);
+		statistics.setText("Card vote failed: " + reason);
 	}
 	//DONE
 	@Override
-	public void setOnAssociationChoosen(
+	public void setOnAssociationChoosen (
 			EventHandler<Pair<String, Integer>> handler) {
-		main.setVisible(true);
-		final EventHandler<Pair<String, Integer>> thishandler = handler;
-		info.setText("Choose your card and set your association");
-		teller.setVisible(true);
-		for(final Image image : images){
-			if(image.getid() > 0){
-				MouseListener AL = new MouseListener() { 
-					public void mouseClicked(MouseEvent arg0) {
-						String str = text.getText();
-						if(str.equals("")){
-							info.setText("SET ASSOCIATION:");
-						}
-						else{
-							int id = image.getid();
-							bufImage = id;
-							id++;
-							info.setText("You choose " + id + " image. Your association is " + str);
-							//thishandler.apply(str,id);
-						}
-					}
-					public void mouseEntered(MouseEvent arg0) {
-					}
-					public void mouseExited(MouseEvent arg0) {
-					}
-					public void mousePressed(MouseEvent arg0) {
-					}
-					public void mouseReleased(MouseEvent arg0) {
-					}
-				};
-				image.AddList(AL);
-			}			
-		}	
+		this.onAssociationChosen = handler;
 	}
 	//DONE
 	public void associationChoosenSuccess() {
@@ -185,29 +111,31 @@ public class View implements ViewBase{
 		statistics.setBackground(new Color(168, 189, 217));
 		String path = "img/loginback.png";//loginback
 		final Container container = new Container();
-		final TextField host = new TextField("host");
-		final TextField port = new TextField("port");
-		final TextField login = new TextField("login");
-		final Button button = new Button("OK");
+		final TextField host = new TextField("localhost");
+		final TextField port = new TextField("6666");
+		final TextField login = new TextField("<your login>");
+		final Button button = new Button("OK");		
 		container.add(host);
 		container.add(port);
 		container.add(login);
 		container.add(button);
 		frame.add(container);
 		container.setBounds(0, 0, 300, 450);
-		host.setBounds(90, 300, 140, 30);
-		port.setBounds(90, 340, 140, 30);
-		login.setBounds(90, 380, 140, 30);	
-		button.setBounds(90, 420, 140, 30);	
+		host.setBounds(90, 280, 140, 30);
+		port.setBounds(90, 320, 140, 30);
+		login.setBounds(90, 360, 140, 30);	
+		button.setBounds(90, 400, 140, 30);
+		statistics.setBounds(0, 445, 320, 20);		
+		
 		button.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {	
-				String HOST = host.getText();
-				String LOGIN = login.getText();
-				String STRPORT = port.getText();
-				int PORT;
-				if(Help.isInteger(STRPORT) ==true){
-					PORT = Integer.parseInt(port.getText());					
-					Handler.apply(new Triplet(HOST, PORT, LOGIN));
+				String hostVal = host.getText();
+				String loginVal = login.getText();
+				String portStr = port.getText();
+				int portVal;
+				if (Help.isInteger(portStr)){
+					portVal = Integer.parseInt(portStr);					
+					Handler.apply(new Triplet<String, Integer, String>(hostVal, portVal, loginVal));
 				}
 				else{
 					connectionFailed("failed:input:port");
@@ -215,24 +143,22 @@ public class View implements ViewBase{
 			}			
 		});	
 		Help.open(frame, path);
-		statistics.setBounds(0,frame.getHeight()-25,frame.getWidth(),20);
-		
 	}
 	//DONE
-	public void connectionSuccess(){
+	public void connectionSuccess() {
 		frame.removeAll();
-		frame.setLayout(null);		
+		frame.setLayout(null);
+		final EventHandler<Integer> onCloseHandler = onClose;
 		frame.addWindowListener(new WindowAdapter(){
-			  public void windowClosing(WindowEvent we){
-			    System.exit(0);
-			  }
-			});		
-		Dimension ScreenSize = new Dimension();
-		ScreenSize = Toolkit.getDefaultToolkit().getScreenSize();
+			public void windowClosing(WindowEvent we){
+				onCloseHandler.apply(1);
+			}
+		});		
+		Dimension ScreenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Dimension ImageSize = new Dimension(1200,600);
 		frame.setBounds(
-				(int)ScreenSize.getWidth()/2-600,
-				(int)ScreenSize.getHeight()/2-300,
+				((int)ScreenSize.getWidth() - (int)ImageSize.getWidth())/2,
+				((int)ScreenSize.getHeight() - (int)ImageSize.getHeight())/2,
 				(int)ImageSize.getWidth(),
 				(int)ImageSize.getHeight()
 				);		
@@ -245,21 +171,17 @@ public class View implements ViewBase{
 	}
 	//DONE
 	public void connectionFailed(String reason) {
-		statistics.setText(reason);
+		statistics.setText("Connection failed: " + reason);
 	}
-	//вроде не надо 
+	//DONE
 	@Override
 	public void setOnClose(EventHandler<Integer> handler) {
-		// TODO Auto-generated method stub
-		
+		this.onClose = handler;
 	}
-	//вроде не надо 
 	@Override
 	public void canClose() {
-		// TODO Auto-generated method stub
-		
+		System.exit(0);
 	}
-	//вроде не надо 
 	@Override
 	public void errorOnClose(String reason) {
 		statistics.setText("Warning:" + reason);
@@ -280,23 +202,98 @@ public class View implements ViewBase{
 	public void showSelfCards(ArrayList<Integer> cards) {
 		addImages(cards);	
 	}
-	//пока не надо?
+	//DONE
 	@Override
 	public void cardChosenRequire(String story) {
-		// TODO Auto-generated method stub
-		
+		main.setVisible(true);
+		final EventHandler<Integer> thishandler = this.onCardChoosen;
+		statistics.setText("Choose your card on teller story: " + story);
+		for(final Image image : images){
+			if(image.getid() >= 0){
+				MouseListener AL = new MouseListener() { 
+					public void mouseClicked(MouseEvent arg0) {
+						int id = image.getid();
+						thishandler.apply(id);	
+						bufImage = id;
+						info.setText("You've chosen " + id + " image.");						
+					}
+					public void mouseEntered(MouseEvent arg0) {
+					}
+					public void mouseExited(MouseEvent arg0) {
+					}
+					public void mousePressed(MouseEvent arg0) {
+					}
+					public void mouseReleased(MouseEvent arg0) {
+					}
+				};
+				image.AddList(AL);
+			}			
+		}			
 	}
-	//пока не надо?
+	//DONE
 	@Override
 	public void cardVoteRequire() {
-		// TODO Auto-generated method stub
-		
+		main.setVisible(true);
+		final EventHandler<Integer> thishandler = onCardVote;
+		statistics.setText("Choose your card");
+		for(final Image image : images) {
+			if(image.getid() >= 0){
+				MouseListener AL = new MouseListener() { 
+					public void mouseClicked(MouseEvent arg0) {
+						int id = image.getid();
+						thishandler.apply(id);						
+						bufImage = id;
+						info.setText("You choose image #" + id + ".");						
+					}
+					public void mouseEntered(MouseEvent arg0) {
+					}
+					public void mouseExited(MouseEvent arg0) {
+					}
+					public void mousePressed(MouseEvent arg0) {
+					}
+					public void mouseReleased(MouseEvent arg0) {
+					}
+				};
+				image.AddList(AL);
+			}			
+		}
 	}
-	//пока не надо?
+	//DONE
 	@Override
 	public void associationRequire() {
-		// TODO Auto-generated method stub
-		
+		main.setVisible(true);
+		final EventHandler<Pair<String, Integer>> thishandler = onAssociationChosen;
+		info.setText("Choose your card and set your association");
+		teller.setVisible(true);
+		for(final Image image : images){
+			if(image.getid() > 0){
+				MouseListener AL = new MouseListener() { 
+					public void mouseClicked(MouseEvent arg0) {
+						String str = text.getText();
+						if(str.equals("")){
+							info.setText("Please, enter association first!");
+						}
+						else {
+							int id = image.getid();
+							bufImage = id;
+							info.setText("You've chosen " + id + " image. Your association is " + str);
+							text.setText("");
+							thishandler.apply(new Pair<>(str, id));
+						}
+					}
+					public void mouseEntered(MouseEvent arg0) {
+					}
+					public void mouseExited(MouseEvent arg0) {
+					}
+					public void mousePressed(MouseEvent arg0) {
+					}
+					public void mouseReleased(MouseEvent arg0) {
+					}
+				};
+				image.AddList(AL);
+			}			
+		}	
+
 	}
 	//DONE
 	public void showStats(HashMap<String, Integer> stats) {
@@ -338,14 +335,15 @@ public class View implements ViewBase{
 		}
 	}
 	/************************************************************************
-	***************************HELPER_FUNCTIONS******************************
-	************************************************************************/
-	
+	 ***************************HELPER_FUNCTIONS******************************
+	 ************************************************************************/
+
 	private void addImages(ArrayList<Integer> nums){
 		main.setVisible(true);
 		int i = 0;
 		for(i = 0; i < nums.size(); i ++){
-			images.get(i).repaint(generatePath(nums.get(i)),i);
+			int id = nums.get(i);
+			images.get(i).repaint(generatePath(id), id);
 		}
 		for(i = nums.size(); i < images.size(); i++){
 			images.get(i).repaint(generatePath(0),-1);
@@ -354,19 +352,15 @@ public class View implements ViewBase{
 	private void addImage(int place){
 		images.get(place).repaint(generatePath(0),-1);
 	}
-	
-	private void addImage(int path, int place){
-		images.get(place).repaint(generatePath(path), path);
-	}
-	
+
 	private String generatePath(int num){
 		return "img/" + num + ".png";
 	}
-	
+
 	private void addSetAssociation(){
 		frame.add(teller);
 		teller.setBounds(940, 70, 140, 500);
-		Label label = new Label("ASSOCIATION:"); 
+		Label label = new Label("Association:"); 
 		label.setAlignment(Label.CENTER);
 		text = new TextField();
 		teller.add(text);
@@ -375,7 +369,7 @@ public class View implements ViewBase{
 		text.setBounds(20, 50, 100, 30);
 		teller.setVisible(false);
 	}
-	
+
 	private void addImages(){//images in main container
 		main.setBounds(200, 70, 730, 500);
 		frame.add(main);
@@ -391,7 +385,7 @@ public class View implements ViewBase{
 			images.add(im);
 			main.add(im);
 		}
-		
+
 	}
 
 	private void addInfo(){ //info and statistics in frame
@@ -400,14 +394,14 @@ public class View implements ViewBase{
 		statistics.setAlignment(Label.CENTER);
 		statistics.setBackground(new Color(168, 189, 217));
 		frame.add(statistics);
-				
+
 		//info bar - first 
 		info.setBounds(0,25,1200,40);//1
 		info.setAlignment(Label.CENTER);
 		info.setBackground(new Color(168, 189, 217));
 		frame.add(info);
 	}
-	
+
 	private void addStat(){//info about last game(user,score,lastimage) in stat container
 		stat.setBounds(20, 70, 170, 500);
 		frame.add(stat);
@@ -415,23 +409,23 @@ public class View implements ViewBase{
 		for(int i = 0; i < 4; i++){
 			Label userlabel = new Label("user:");
 			Label scorelabel = new Label("score:");
-			
+
 			userlabel.setBackground(new Color(168, 189, 217));//user
 			scorelabel.setBackground(new Color(168, 189, 217));//score
-			
+
 			userlabel.setBounds(0, x, 90, 20);
 			Image imagelabel = new Image(100, x,70, 105, 1);
 			imagelabel.repaint();
 			scorelabel.setBounds(0, x+25, 90, 20);
-			
+
 			user.add(userlabel);
 			score.add(scorelabel);
 			lastimage.add(imagelabel);
-			
+
 			stat.add(userlabel);
 			stat.add(scorelabel);
 			stat.add(imagelabel);
-			
+
 			x = x + 120;
 		}
 		stat.setVisible(false);
